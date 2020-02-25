@@ -30,10 +30,19 @@ def load_pkl(file_or_url):
 
 def locate_latest_pkl(result_dir):
     allpickles = sorted(glob.glob(os.path.join(result_dir, '0*', 'network-*.pkl')))
-    latest_pickle = allpickles[-1]
-    resume_run_id = os.path.basename(os.path.dirname(latest_pickle))
-    RE_KIMG = re.compile('network-snapshot-(\d+).pkl')
-    kimg = int(RE_KIMG.match(os.path.basename(latest_pickle)).group(1))
+
+    try:
+        latest_pickle = allpickles[-1]
+    except IndexError:
+        latest_pickle = None
+
+    if latest_pickle is not None:
+        resume_run_id = os.path.basename(os.path.dirname(latest_pickle))
+        RE_KIMG = re.compile('network-snapshot-(\d+).pkl')
+        kimg = int(RE_KIMG.match(os.path.basename(latest_pickle)).group(1))
+    else:
+        kimg = 0.0
+
     return (latest_pickle, float(kimg))
 
 def save_pkl(obj, filename):
