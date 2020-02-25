@@ -12,6 +12,8 @@ import numpy as np
 import PIL.Image
 import PIL.ImageFont
 import dnnlib
+import glob
+import re
 
 #----------------------------------------------------------------------------
 # Convenience wrappers for pickle that are able to load data produced by
