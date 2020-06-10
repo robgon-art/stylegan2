@@ -12,6 +12,8 @@ import numpy as np
 import PIL.Image
 import PIL.ImageFont
 import dnnlib
+import glob
+import re
 
 #----------------------------------------------------------------------------
 # Convenience wrappers for pickle that are able to load data produced by
@@ -25,6 +27,23 @@ def open_file_or_url(file_or_url):
 def load_pkl(file_or_url):
     with open_file_or_url(file_or_url) as file:
         return pickle.load(file, encoding='latin1')
+
+def locate_latest_pkl(result_dir):
+    allpickles = sorted(glob.glob(os.path.join(result_dir, '0*', 'network-*.pkl')))
+
+    try:
+        latest_pickle = allpickles[-1]
+    except IndexError:
+        latest_pickle = None
+
+    if latest_pickle is not None:
+        resume_run_id = os.path.basename(os.path.dirname(latest_pickle))
+        RE_KIMG = re.compile('network-snapshot-(\d+).pkl')
+        kimg = int(RE_KIMG.match(os.path.basename(latest_pickle)).group(1))
+    else:
+        kimg = 0.0
+
+    return (latest_pickle, float(kimg))
 
 def save_pkl(obj, filename):
     with open(filename, 'wb') as file:
