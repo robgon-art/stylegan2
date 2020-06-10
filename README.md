@@ -1,6 +1,6 @@
 ## StyleGAN2 &mdash; Official TensorFlow Implementation
 
-Forked copy to Experirment with image autmentation.
+Forked copy to experiment with image augmentation.
 
 ![Teaser image](./docs/stylegan2-teaser-1024x256.png)
 
