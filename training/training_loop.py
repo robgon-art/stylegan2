@@ -26,13 +26,6 @@ def process_reals(x, labels, lod, mirror_augment, drange_data, drange_net):
     if mirror_augment:
         with tf.name_scope('MirrorAugment'):
             x = tf.where(tf.random_uniform([tf.shape(x)[0]]) < 0.5, x, tf.reverse(x, [3]))
-            
-            # Rotate the images randomly. Need to convert to NHWC and then back to NCHW.
-            x = tf.transpose(x, [0, 2, 3, 1])
-            x = tf.where(tf.random_uniform([tf.shape(x)[0]]) < 1/4, x, tf.image.rot90(x))
-            x = tf.where(tf.random_uniform([tf.shape(x)[0]]) < 1/3, x, tf.image.rot90(x))
-            x = tf.where(tf.random_uniform([tf.shape(x)[0]]) < 1/2, x, tf.image.rot90(x))
-            x = tf.transpose(x, [0, 3, 1, 2])
     with tf.name_scope('FadeLOD'): # Smooth crossfade between consecutive levels-of-detail.
         s = tf.shape(x)
         y = tf.reshape(x, [-1, s[1], s[2]//2, 2, s[3]//2, 2])
